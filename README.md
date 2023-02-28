@@ -16,6 +16,12 @@ Assistant: Okay, moving spotify... [SNAP(notepad, main monitor top right) ->move
 
 Runs locally using [pythia-2.8B-deduped](https://huggingface.co/EleutherAI/pythia-2.8b-deduped). This would work a lot better if I just used the ChatGPT api, but I have a nice graphics card for testing, and I think it's important that we try and develop these tools to run locally instead of only relying on third party inference.
 
+Because the local models are less smart, I do some dumb things to make it work.  
+I tried using the language model to pick the process name that best matched the user input, but it wasn't very good at it. Better prompts would probably help, but I just used a fuzzy string matcher instead.
+Same with converting from natural language to window coordinates.
+
+The important thing is that it shows the agent invoking the tool, and that the parameters for the tool are passed as natural language.
+
 [Original paper](https://arxiv.org/abs/2302.04761)
 
 Check out [main.ipynb](main.ipynb) for a demo.
