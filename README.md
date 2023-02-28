@@ -1,5 +1,7 @@
 # Toolformer
 
+![demo](./demo.mp4)
+
 Using toolformer prompting to create a copilot for your operating system.
 
 Currently only supports moving windows around.
@@ -17,3 +19,6 @@ Runs locally using [pythia-2.8B-deduped](https://huggingface.co/EleutherAI/pythi
 
 Check out [main.ipynb](main.ipynb) for a demo.
 Windows only for now.
+
+
+Credit to [minosvasilias](https://github.com/minosvasilias/toolformer-zero) for their prompt
