@@ -1,6 +1,7 @@
 # Toolformer
 
-![demo](./demo.mp4)
+https://user-images.githubusercontent.com/9356891/221771638-95936503-db50-4b50-9cc8-bef088cb9d72.mp4
+
 
 Using toolformer prompting to create a copilot for your operating system.
 
