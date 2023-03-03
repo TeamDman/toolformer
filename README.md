@@ -29,3 +29,5 @@ Windows only for now.
 
 
 Credit to [minosvasilias](https://github.com/minosvasilias/toolformer-zero) for their prompt
+
+Credit to [tatellos](https://github.com/mallorbc/whisper_mic) for their whisper mic stuff

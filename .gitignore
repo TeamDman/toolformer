@@ -1,1 +1,4 @@
 pythia-2.8B-deduped/
+pythia-6.9B-deduped/
+__pycache__
+venv
