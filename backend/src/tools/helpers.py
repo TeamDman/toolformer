@@ -6,7 +6,6 @@ from tools.math import MathTool
 from tools.snap import SnapTool
 
 from tools.base import Tool
-from text import predict
 
 tools = [
     NowTool(),
@@ -34,7 +33,7 @@ def handle_tool_invocation(response: str) -> Tuple[Literal[False], None] | Tuple
         return True, f"ERROR: {e}"
     return False, None
 
-def predict_with_tools(prompt: str) -> Tuple[str, Any]:
+def predict_with_tools(prompt: str, predict: Callable[[str, str], str]) -> Tuple[str, Any]:
     first_prompt = build_preprompt() + prompt + build_postprompt()
     first_response_raw = predict(first_prompt, "->")
 

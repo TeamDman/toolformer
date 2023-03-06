@@ -1,10 +1,8 @@
+import lifecycle
 import asyncio
 import websockets.server
 import json
 import mic
-import text
-import signal
-import queue
 import traceback
 from dataclasses import asdict
 import time
@@ -82,16 +80,13 @@ async def main():
         raise SystemExit(1)
 
     send_prompt_task = asyncio.create_task(voice_handler(voice_queue, clients))
+
     stop = asyncio.get_running_loop().create_future()
-    def shutdown(*args):
-        print("[MAIN] Shutting down")
-        stop.set_result(None)
+    def shutdown():
         stop_event.set()
         record_task.cancel()
         transcribe_task.cancel()
-        print("[MAIN] Shutdown complete")
-
-    signal.signal(signal.SIGINT, shutdown)
+    stop = lifecycle.create_lifecycle(shutdown)
 
     async def serve(websocket: websockets.server.WebSocketServerProtocol):
         try:

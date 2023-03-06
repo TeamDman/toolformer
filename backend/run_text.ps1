@@ -9,9 +9,9 @@ try
     if ($watch) 
     {
         watchmedo auto-restart `
-            --pattern "*.py" `
+            --pattern "main_text.py;constants.py;lifecycle.py" `
             --recursive `
-            --signal SIGTERM ..\venv\Scripts\python.exe main.py
+            --signal SIGTERM ..\venv\Scripts\python.exe main_text.py
     }
     else
     {
