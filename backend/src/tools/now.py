@@ -18,6 +18,6 @@ class NowTool(Tool):
             method=self.invoke
         )
 
-    def invoke(self, *args, **kwargs) -> str:
+    def invoke(self, _) -> str:
         import datetime
         return str(datetime.datetime.now())

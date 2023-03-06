@@ -14,7 +14,7 @@ class MathTool(Tool):
             method=self.invoke
         )
 
-    def invoke(self, mathexpr: str, *args, **kwargs) -> str:
+    def invoke(self, mathexpr: str) -> str:
         import sympy
         result = sympy.sympify(mathexpr).evalf()
         return str(result)

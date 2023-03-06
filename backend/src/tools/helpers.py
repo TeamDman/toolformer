@@ -1,14 +1,18 @@
 from typing import *
+
 from tools.now import NowTool
 from tools.weekday import WeekdayTool
 from tools.math import MathTool
+from tools.snap import SnapTool
+
 from tools.base import Tool
 from models.text import predict
 
 tools = [
     NowTool(),
     WeekdayTool(),
-    MathTool()
+    MathTool(),
+    SnapTool()
 ]
 
 tools_dict = {tool.name: tool for tool in tools}
@@ -32,15 +36,30 @@ def handle_tool_invocation(response: str) -> Tuple[Literal[False], None] | Tuple
 
 def predict_with_tools(preprompt: str, prompt: str, ) -> Tuple[str, Any]:
     first_prompt = build_preprompt() + prompt + build_postprompt()
-    first_response = predict(first_prompt, "->")
+    first_response_raw = predict(first_prompt, "->")
+
+    # trim agent over-continuing the conversation
+    good, bad = (first_response_raw+"User:").split("User:", maxsplit=1)
+    first_response = good
+    
     tool_was_used, result = handle_tool_invocation(first_response)
     if tool_was_used:
         second_prompt = first_prompt + first_response + result + "]"
         second_response = predict(second_prompt, "\n")
         full_response = first_response + result + "]" + second_response
-        return full_response, (first_prompt, first_response, second_prompt, second_response)
+        return full_response, {
+            "first_prompt": first_prompt,
+            "first_response": first_response,
+            "second_prompt": second_prompt,
+            "second_response": second_response,
+            "bad": bad,
+        }
+        
     else:
-        return first_response, (first_prompt, first_response)
+        return first_response, {
+            "first_prompt": first_prompt,
+            "first_response": first_response,
+        }
 
 def get_tool(tool_name: str) -> Tool:
     return tools_dict[tool_name]
