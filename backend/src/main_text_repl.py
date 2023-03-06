@@ -15,6 +15,7 @@ async def main():
                 print(f"Response: {response}")
     except websockets.client.ConnectionClosedError:
         print("Connection closed")
+        exit(0)
 
 if __name__ == "__main__":
     asyncio.run(main())

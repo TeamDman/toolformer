@@ -11,11 +11,13 @@
 	let messages: Props<Message>[] = [];
 
 	let socket: WebSocket;
+	let connected = false;
+
 	if (browser) {
 		socket = new WebSocket("ws://localhost:8765/");
 		socket.addEventListener("open", () => {
 			console.log("Connected");
-			// socket.send("Hello, server!");
+			connected = true;
 		});
 
 		socket.addEventListener("message", (event) => {
@@ -40,6 +42,7 @@
 
 		socket.addEventListener("close", () => {
 			console.log("Disconnected");
+			connected = false;
 		});
 
 		socket.addEventListener("message", (e) => {
@@ -61,7 +64,23 @@
 	}
 </script>
 
-<VerticalSplit ratio={0.2}>
+{#if connected}
+	<div class="m-2">
+		<HorizontalSplit ratio={undefined}>
+			<div slot="top">
+				<Conversation {messages} />
+			</div>
+			<div slot="bottom" class="mt-2">
+				<ChatInput on:submit={onUserChatSubmit} />
+			</div>
+		</HorizontalSplit>
+	</div>
+{:else}
+	<div class="m-2">
+		<Hello backgroundColor="blue" />
+	</div>
+{/if}
+<!-- <VerticalSplit ratio={0.2}>
 	<div slot="left">
 		<HorizontalSplit ratio={undefined}>
 			<div slot="top">
@@ -75,4 +94,4 @@
 	<div slot="right">
 		<Hello backgroundColor="blue" />
 	</div>
-</VerticalSplit>
+</VerticalSplit> -->

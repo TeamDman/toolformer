@@ -10,4 +10,5 @@ def create_lifecycle(callback: Callable | None = None):
             callback()
         print("[LIFECYCLE] Shutdown complete")
     signal.signal(signal.SIGINT, shutdown)
+    signal.signal(signal.SIGTERM, shutdown)
     return stop_future

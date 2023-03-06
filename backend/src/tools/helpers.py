@@ -16,7 +16,7 @@ tools = [
 
 tools_dict = {tool.name: tool for tool in tools}
 
-def handle_tool_invocation(response: str) -> Tuple[Literal[False], None] | Tuple[Literal[True],str]:
+async def handle_tool_invocation(response: str) -> Tuple[Literal[False], None] | Tuple[Literal[True],str]:
     # check for tool invocation and capture parameters
     try:
         import re
@@ -33,19 +33,19 @@ def handle_tool_invocation(response: str) -> Tuple[Literal[False], None] | Tuple
         return True, f"ERROR: {e}"
     return False, None
 
-def predict_with_tools(prompt: str, predict: Callable[[str, str], str]) -> Tuple[str, Any]:
+async def predict_with_tools(prompt: str, predict: Callable[[str, str], str]) -> Tuple[str, Any]:
     first_prompt = build_preprompt() + prompt + build_postprompt()
-    first_response_raw = predict(first_prompt, "->")
+    first_response_raw = await predict(first_prompt, "->")
 
     # trim agent over-continuing the conversation
     good, bad = (first_response_raw+"User:").split("User:", maxsplit=1)
     first_response = good
     
-    tool_was_used, result = handle_tool_invocation(first_response)
+    tool_was_used, result = await handle_tool_invocation(first_response)
     if tool_was_used:
         assert result is not None
         second_prompt = first_prompt + first_response + result + "]"
-        second_response = predict(second_prompt, "\n")
+        second_response = await predict(second_prompt, "\n")
         full_response = first_response + result + "]" + second_response
         return full_response, {
             "first_prompt": first_prompt,

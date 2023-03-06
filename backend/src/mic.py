@@ -11,7 +11,7 @@ async def record_audio(
     energy: int,
     pause: float,
     dynamic_energy: bool,
-    stop_event: asyncio.Event
+    stop_future: asyncio.Future
 ):
     r = sr.Recognizer()
     r.energy_threshold = energy
@@ -23,7 +23,7 @@ async def record_audio(
     print("[MIC] Starting listener")
     with sr.Microphone(sample_rate=16000) as source:
         print("[MIC] found microphone")
-        while not stop_event.is_set():
+        while not stop_future.done():
             #get and save audio to wav file
             audio = await loop.run_in_executor(None, r.listen, source)
             torch_audio = torch.from_numpy(np.frombuffer(audio.get_raw_data(), np.int16).flatten().astype(np.float32) / 32768.0)
@@ -36,10 +36,10 @@ async def transcribe_forever(
     result_queue: asyncio.Queue[str],
     audio_model: whisper.Whisper,
     english: bool,
-    stop_event: asyncio.Event
+    stop_future: asyncio.Future
 ):
     print("[MIC] Starting transcriber")
-    while not stop_event.is_set():
+    while not stop_future.done():
         audio_data = await audio_queue.get()
         if english:
             result = audio_model.transcribe(audio_data, language='english')
@@ -51,7 +51,7 @@ async def transcribe_forever(
     print("[MIC] Transcriber finished")
     
 
-async def start_background():
+async def start_background(stop_future: asyncio.Future):
     model = "base"
     audio_model = whisper.load_model(model).to("cuda")
 
@@ -62,7 +62,6 @@ async def start_background():
 
     audio_queue: asyncio.Queue[torch.Tensor] = asyncio.Queue()
     result_queue: asyncio.Queue[str] = asyncio.Queue()
-    stop_event = asyncio.Event()
 
     record_task = asyncio.create_task(
         record_audio(
@@ -70,7 +69,7 @@ async def start_background():
             energy,
             pause,
             dynamic_energy,
-            stop_event,
+            stop_future,
         )
     )
 
@@ -80,15 +79,15 @@ async def start_background():
             result_queue,
             audio_model,
             english,
-            stop_event,
+            stop_future,
         )
     )
 
-    return result_queue, stop_event, record_task, transcribe_task
+    return result_queue
 
 async def prompt_recognizer(voice_queue: asyncio.Queue[str], activation_keywords: List[str] | None = None):
     if activation_keywords is None:
-        activation_keywords = ["computer", "pewter", "pewder", "cuter"]
+        activation_keywords = ["computer", "pewter", "pewder", "cuter", "puter"]
     while True:
         prompt = await voice_queue.get()
         print(f"[MIC] heard '{prompt}'")
@@ -96,8 +95,8 @@ async def prompt_recognizer(voice_queue: asyncio.Queue[str], activation_keywords
         for keyword in activation_keywords:
             if prompt.lower().startswith(keyword):
                 activated = True
-                prompt = prompt[len(keyword):].strip().strip(",").strip()
+                prompt = prompt[len(keyword):].strip().lstrip(",").lstrip(".").strip()
                 break
-        if activated:
+        if activated and len(prompt) > 0:
             print(f"[MIC] activated with '{prompt}'")
             yield prompt
