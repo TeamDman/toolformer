@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "postprompt",
         "preprompt"
     ],
     "python.analysis.typeCheckingMode": "basic"

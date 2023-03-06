@@ -6,7 +6,7 @@ import torch
 model: GPTNeoXForCausalLM | None = None
 tokenizer: AutoTokenizer | None = None
 
-def preheat(model_repo: str, model_name: str, model_revision: str) -> None:
+async def preheat(model_repo: str, model_name: str, model_revision: str) -> None:
     global model
     global tokenizer
     print("Loading model and tokenizer...")
