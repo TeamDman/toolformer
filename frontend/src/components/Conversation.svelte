@@ -16,7 +16,14 @@
 		};
 	});
 
+	let y = 0;
+	$: {
+		console.log(messages.length);
+		y = 100;
+	}
 	// $: console.log(messages);
 </script>
+
+<svelte:window bind:scrollY={y} />
 
 <List items={listItems} />

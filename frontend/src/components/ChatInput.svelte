@@ -8,7 +8,7 @@
 			side: "right",
 			content: input,
 			timestamp: new Date().getTime(),
-			senderName: "John",
+			senderName: "User (web ui)",
 		} as Props<Message>);
 	}
 
