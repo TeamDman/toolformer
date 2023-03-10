@@ -67,7 +67,7 @@ class SnapTool(Tool):
         from fuzzywuzzy import fuzz
         ranked = [(max([fuzz.ratio(str(feature), name) for feature in x]),x) for x in self.list_windows()]
         ranked = sorted(ranked, key=lambda x: x[0], reverse=True)
-        ranked = [x for x in ranked if x[0] > 50]
+        ranked = [x for x in ranked if x[0] > 10]
         return None if len(ranked) == 0 else ranked[0][1]
 
     def pos2pos(self, pos: str) -> Tuple[int,int,int,int]:

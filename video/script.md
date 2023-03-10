@@ -21,3 +21,5 @@ Something that doesn't make mistakes in pronunciation.
 I still choose the words.
 I just don't care to sit here and read them out loud until I'm satisfied.
 I hope you don't mind.
+My main disappointment will be having used an online tool instead of running one locally.
+I'm not sure if I can get the same quality of results with a local model at this stage though.
