@@ -32,6 +32,8 @@ Credit to [minosvasilias](https://github.com/minosvasilias/toolformer-zero) for 
 
 Credit to [tatellos](https://github.com/mallorbc/whisper_mic) for their whisper mic stuff
 
+Credit to [coqui-ai](https://github.com/coqui-ai/TTS) for their TTS stuff
+
 ## Notes to self
 
 checkout langchain
