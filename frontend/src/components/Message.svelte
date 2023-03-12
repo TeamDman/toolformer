@@ -6,7 +6,13 @@
 	$: right = side === "right";
 </script>
 
-<div class="message rounded-md p-1 mt-1" class:bg-blue-400={right} class:self-end={right}>
+<div
+	class="message rounded-md p-1 mt-1"
+	class:bg-blue-400={right}
+	class:bg-purple-400={!right}
+	class:self-end={right}
+	class:self-start={!right}
+>
 	<div>
 		<div class="message-sender font-bold">{senderName}</div>
 		<div class="message-timestamp text-gray-500">{timestamp}</div>

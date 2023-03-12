@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* body {
-    background-color: orange;
-} */
+body {
+    background-color: black;
+}
 
 .mi {
     font-size: 1.4rem;
