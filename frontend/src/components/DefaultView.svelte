@@ -1,19 +1,21 @@
 <script lang="ts">
 	import { browser } from "$app/environment";
+	import { onDestroy } from "svelte";
 	import type { Props } from "../app";
 	import ChatInput from "./ChatInput.svelte";
 	import Conversation from "./Conversation.svelte";
 	import Hello from "./hello.svelte";
 	import HorizontalSplit from "./HorizontalSplit.svelte";
 	import type Message from "./Message.svelte";
+	import Shader from "./Shader.svelte";
 	import VerticalSplit from "./VerticalSplit.svelte";
 
 	let messages: Props<Message>[] = [];
 
-	let socket: WebSocket;
+	let socket: WebSocket | null = null;
 	let connected = false;
-
-	if (browser) {
+	let dots = "...";
+	function connect() {
 		socket = new WebSocket("ws://localhost:8765/");
 		socket.addEventListener("open", () => {
 			console.log("Connected");
@@ -43,24 +45,41 @@
 		socket.addEventListener("close", () => {
 			console.log("Disconnected");
 			connected = false;
+			socket = null;
 		});
-
-		socket.addEventListener("message", (e) => {
-			console.log(`Default view got ${e}`);
-		});
+		return socket;
 	}
+
+	if (browser) {
+		socket = connect();
+	}
+
+	const dotsInterval = setInterval(() => {
+		if (!connected) {
+			dots += ".";
+			if (dots.length > 3) {
+				dots = "";
+			}
+			if (socket == null) {
+				socket = connect();
+			}
+		}
+	}, 500);
+	onDestroy(() => {
+		clearInterval(dotsInterval);
+	});
 
 	async function onUserChatSubmit(e: CustomEvent<Props<Message>>) {
 		console.log(e.detail);
 		const message = e.detail as Props<Message>;
-		socket.send(
-			JSON.stringify({
-				event: "message",
-				message,
-			}),
-		);
-		// messages.push(e.detail as Props<Message>);
-		// messages = messages;
+		if (socket != null) {
+			socket.send(
+				JSON.stringify({
+					event: "message",
+					message,
+				}),
+			);
+		}
 	}
 </script>
 
@@ -76,22 +95,8 @@
 		</HorizontalSplit>
 	</div>
 {:else}
-	<div class="m-2">
-		<Hello backgroundColor="blue" />
+	<Shader />
+	<div class="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+		<div class="text-2xl text-white">Waiting for server{dots}</div>
 	</div>
 {/if}
-<!-- <VerticalSplit ratio={0.2}>
-	<div slot="left">
-		<HorizontalSplit ratio={undefined}>
-			<div slot="top">
-				<Conversation {messages} />
-			</div>
-			<div slot="bottom" class="mt-2">
-				<ChatInput on:submit={onUserChatSubmit} />
-			</div>
-		</HorizontalSplit>
-	</div>
-	<div slot="right">
-		<Hello backgroundColor="blue" />
-	</div>
-</VerticalSplit> -->

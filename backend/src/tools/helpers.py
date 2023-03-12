@@ -4,18 +4,23 @@ from tools.now import NowTool
 from tools.weekday import WeekdayTool
 from tools.math import MathTool
 from tools.snap import SnapTool
+# from tools.edge import EdgeTool
 
 from tools.base import Tool
+
+import traceback
 
 tools = [
     NowTool(),
     WeekdayTool(),
     MathTool(),
-    SnapTool()
+    SnapTool(),
+    # EdgeTool(),
 ]
 
 tools_dict = {tool.name: tool for tool in tools}
 
+# returns (toolUsed, result)
 async def handle_tool_invocation(response: str) -> Tuple[Literal[False], None] | Tuple[Literal[True],str]:
     # check for tool invocation and capture parameters
     try:
@@ -30,6 +35,7 @@ async def handle_tool_invocation(response: str) -> Tuple[Literal[False], None] |
                 result = tool.method(params)
                 return True, result
     except Exception as e:
+        traceback.print_exc()
         return True, f"ERROR: {e}"
     return False, None
 
