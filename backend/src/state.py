@@ -7,14 +7,15 @@ import asyncio
 from enum import Enum
 
 class Mode(Enum):
-    ACTIVATION_KEYWORD = 0
-    ALWAYS_ON = 1
+    ACTIVATION_KEYWORD = 1
+    ALWAYS_ON = 2
 
 @dataclass
 class State:
     message_history: List[Message] = field(default_factory=list)
     connected_clients: Set[websockets.WebSocketServerProtocol] = field(default_factory=set)
-    mode: Mode = Mode.ACTIVATION_KEYWORD,
+    mode: Mode = Mode.ACTIVATION_KEYWORD
+    # mode: Mode = Mode.ALWAYS_ON
     stop_future: asyncio.Future = field(default_factory=lifecycle.create_lifecycle)
     predict_queue: asyncio.Queue[Tuple[str,str]] = asyncio.Queue()
     predict_reply_queue: asyncio.Queue[str] = asyncio.Queue()

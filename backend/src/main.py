@@ -51,7 +51,7 @@ async def respond_and_distribute(
         return "Error: " + str(e)
 
 
-async def connect_client(
+async def client_handler(
     state: State,
     websocket: websockets.server.WebSocketServerProtocol,
 ):
@@ -71,13 +71,14 @@ async def connect_client(
         print(f"[CLIENT HANDLER] Error: {e}")
         traceback.print_exc()
 
-async def connect_voice(state: State):
+async def voice_handler(state: State):
     try:
         activation_keywords = ["computer", "pewter", "pewder", "cuter", "puter"]
         while True:
             prompt = await state.voice_queue.get()
             print(f"[VOICE HANDLER] heard '{prompt}'")
             activated = False
+            print(f"[VOICE HANDLER] mode is {state.mode}")
             if state.mode == Mode.ALWAYS_ON:
                 activated = True
             elif state.mode == Mode.ACTIVATION_KEYWORD:
@@ -86,10 +87,13 @@ async def connect_voice(state: State):
                         activated = True
                         prompt = prompt[len(keyword):].strip().lstrip(",").lstrip(".").strip()
                         break
-                if not activated:
-                    print(f"[VOICE HANDLER] not activated")
-            if activated and len(prompt) > 0:
+            if not activated:
+                print(f"[VOICE HANDLER] not activated")
+            else:
                 print(f"[VOICE HANDLER] activated with '{prompt}'")
+                if len(prompt) == 0:
+                    print(f"[VOICE HANDLER] empty prompt, continuing")
+                    continue
                 message = Message(
                     side="right",
                     content=prompt,
@@ -102,7 +106,7 @@ async def connect_voice(state: State):
         print(f"[VOICE HANDLER] Error: {e}")
         traceback.print_exc()
 
-async def connect_predictions(state: State):
+async def prediction_handler(state: State):
     try:
         uri = f"ws://localhost:{constants.text_websocket_port}"
         print(f"[PREDICTION HANDLER] Connecting to text model at: {uri}")
@@ -133,8 +137,8 @@ async def main():
         ],
     )
     state.voice_queue=await mic.start_background(state.stop_future)
-    asyncio.create_task(connect_predictions(state))
-    asyncio.create_task(connect_voice(state))
+    asyncio.create_task(prediction_handler(state))
+    asyncio.create_task(voice_handler(state))
 
     async def handleWebSocket(websocket: websockets.server.WebSocketServerProtocol):
         try:
@@ -145,7 +149,7 @@ async def main():
                 "event": "history",
                 "history": [asdict(msg) for msg in state.message_history]
             }))
-            await connect_client(state, websocket)
+            await client_handler(state, websocket)
         finally:
             state.connected_clients.remove(websocket)
             print("[SERVE HANDLER] Client disconnected")

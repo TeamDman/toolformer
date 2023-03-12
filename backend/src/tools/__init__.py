@@ -22,7 +22,7 @@ for path in glob("tools/*.py"):
 
 tools_dict = {tool.name: tool for tool in tools}
 
-print(f"Found {len(tools)} tools: {', '.join([tool.name for tool in tools])}")
+print(f"[TOOLS] Found {len(tools)} tools: {', '.join([tool.name for tool in tools])}")
 
 
 
@@ -53,14 +53,15 @@ async def handle_tool_invocation(state: State, response: str) -> Tuple[Literal[F
 async def predict_with_tools(state: State, prompt: str, predict: Callable[[str, str], str]) -> Tuple[str, Any]:
     first_prompt = build_preprompt() + prompt + build_postprompt()
     print(f"[TOOLS] predicting")
-    first_response_raw = await predict(first_prompt, "->")
-
-    # trim agent over-continuing the conversation
-    good, bad = (first_response_raw+"User:").split("User:", maxsplit=1)
-    if bad is None:
-        bad = ""
-    first_response = good
-    print(f"[TOOLS] first_response: \"{first_response}\" (bad: {len(bad)})")
+    first_response = await predict(first_prompt, "->")
+    if "User:" in first_response:
+        first_response, bad = first_response.split("User:", maxsplit=1)
+        print("[TOOLS] bad: ", bad)
+    if "\n" in first_response:
+        first_response, bad = first_response.split("\n", maxsplit=1)
+        print("[TOOLS] bad: ", bad)
+        
+    print(f"[TOOLS] first_response: \"{first_response}\"")
     
     tool_was_used, result = await handle_tool_invocation(state, first_response)
     if tool_was_used:
@@ -73,7 +74,6 @@ async def predict_with_tools(state: State, prompt: str, predict: Callable[[str, 
             "first_response": first_response,
             "second_prompt": second_prompt,
             "second_response": second_response,
-            "bad": bad,
         }
         
     else:
