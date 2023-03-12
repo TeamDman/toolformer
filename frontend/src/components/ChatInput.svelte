@@ -10,6 +10,7 @@
 			timestamp: new Date().getTime(),
 			senderName: "User (web ui)",
 		} as Props<Message>);
+		input = "";
 	}
 
 	let input = "";
@@ -20,9 +21,9 @@
 		type="text"
 		bind:value={input}
 		placeholder="Type a message..."
-		class="p-1 rounded-md shadow-lg border-gray-400 border-2"
+		class="p-1 rounded-md bg-black border-green-800 border-2 text-white"
 	/>
-	<button type="submit">
-		<i class="mi mi-send text-blue-500"><span class="u-sr-only">Send</span></i>
+	<button type="submit" class="ml-1">
+		<i class="mi mi-send text-green-800"><span class="u-sr-only">Send</span></i>
 	</button>
 </form>

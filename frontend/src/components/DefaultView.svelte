@@ -4,11 +4,8 @@
 	import type { Props } from "../app";
 	import ChatInput from "./ChatInput.svelte";
 	import Conversation from "./Conversation.svelte";
-	import Hello from "./hello.svelte";
-	import HorizontalSplit from "./HorizontalSplit.svelte";
 	import type Message from "./Message.svelte";
 	import Shader from "./Shader.svelte";
-	import VerticalSplit from "./VerticalSplit.svelte";
 
 	let messages: Props<Message>[] = [];
 
@@ -84,15 +81,15 @@
 </script>
 
 {#if connected}
-	<div class="m-2">
-		<HorizontalSplit ratio={undefined}>
-			<div slot="top">
-				<Conversation {messages} />
-			</div>
-			<div slot="bottom" class="mt-2">
+	<div class="h-screen flex flex-col">
+		<div class="flex-1 overflow-auto bg-slate-800 p-2">
+			<Conversation {messages} />
+		</div>
+		<div class="">
+			<div class="p-2 flex justify-center">
 				<ChatInput on:submit={onUserChatSubmit} />
 			</div>
-		</HorizontalSplit>
+		</div>
 	</div>
 {:else}
 	<Shader />

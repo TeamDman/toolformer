@@ -15,13 +15,13 @@
 >
 	<div>
 		<div class="message-sender font-bold">{senderName}</div>
-		<div class="message-timestamp text-gray-500">{timestamp}</div>
+		<!-- <div class="message-timestamp text-gray-500">{timestamp}</div> -->
 	</div>
 	<div class="message-body">{content}</div>
 </div>
-
+<!-- 
 <style>
 	.message:not(:hover) .message-timestamp {
 		display: none;
 	}
-</style>
+</style> -->
