@@ -1,3 +1,4 @@
+from state import State
 from tools.base import Tool, ToolExample
 
 class NowTool(Tool):
@@ -18,6 +19,6 @@ class NowTool(Tool):
             method=self.invoke
         )
 
-    def invoke(self, _) -> str:
+    def invoke(self, state: State, params: str) -> str:
         import datetime
         return str(datetime.datetime.now())

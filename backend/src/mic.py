@@ -5,7 +5,6 @@ import torch
 import numpy as np
 from typing import *
 
-
 async def record_audio(
     audio_queue: asyncio.Queue[torch.Tensor],
     energy: int,
@@ -31,7 +30,7 @@ async def record_audio(
             await audio_queue.put(audio_data)
     print("[MIC] Listener finished")
 
-async def transcribe_forever(
+async def transcribe_audio(
     audio_queue: asyncio.Queue[torch.Tensor],
     result_queue: asyncio.Queue[str],
     audio_model: whisper.Whisper,
@@ -63,7 +62,7 @@ async def start_background(stop_future: asyncio.Future):
     audio_queue: asyncio.Queue[torch.Tensor] = asyncio.Queue()
     result_queue: asyncio.Queue[str] = asyncio.Queue()
 
-    record_task = asyncio.create_task(
+    asyncio.create_task(
         record_audio(
             audio_queue,
             energy,
@@ -73,8 +72,8 @@ async def start_background(stop_future: asyncio.Future):
         )
     )
 
-    transcribe_task = asyncio.create_task(
-        transcribe_forever(
+    asyncio.create_task(
+        transcribe_audio(
             audio_queue,
             result_queue,
             audio_model,
@@ -84,19 +83,3 @@ async def start_background(stop_future: asyncio.Future):
     )
 
     return result_queue
-
-async def prompt_recognizer(voice_queue: asyncio.Queue[str], activation_keywords: List[str] | None = None):
-    if activation_keywords is None:
-        activation_keywords = ["computer", "pewter", "pewder", "cuter", "puter"]
-    while True:
-        prompt = await voice_queue.get()
-        print(f"[MIC] heard '{prompt}'")
-        activated = False
-        for keyword in activation_keywords:
-            if prompt.lower().startswith(keyword):
-                activated = True
-                prompt = prompt[len(keyword):].strip().lstrip(",").lstrip(".").strip()
-                break
-        if activated and len(prompt) > 0:
-            print(f"[MIC] activated with '{prompt}'")
-            yield prompt

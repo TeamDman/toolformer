@@ -58,7 +58,7 @@ async def main():
                     eos_token_id=tokenizer.encode(stop_token)[0],
                     pad_token_id=tokenizer.encode(stop_token)[0],
                 )
-                print(f"[MAIN] Generated {outputs}")
+                # print(f"[MAIN] Generated {outputs}")
                 response = tokenizer.decode(outputs[:, inputs["input_ids"].shape[1]:][0])
                 print(f"[MAIN] Sending {response}")
                 await websocket.send(response)

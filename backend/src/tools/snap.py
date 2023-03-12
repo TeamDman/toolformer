@@ -1,3 +1,4 @@
+from state import State
 from tools.base import Tool, ToolExample
 from typing import *
 
@@ -31,7 +32,7 @@ class SnapTool(Tool):
             method=self.invoke
         )
 
-    def invoke(self, params: str) -> str:
+    def invoke(self, state: State, params: str) -> str:
         window, position = params.split(",")
 
         import ctypes

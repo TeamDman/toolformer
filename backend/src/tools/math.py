@@ -1,3 +1,4 @@
+from state import State
 from tools.base import Tool, ToolExample
 
 class MathTool(Tool):
@@ -14,7 +15,7 @@ class MathTool(Tool):
             method=self.invoke
         )
 
-    def invoke(self, mathexpr: str) -> str:
+    def invoke(self, state: State, mathexpr: str) -> str:
         import sympy
         result = sympy.sympify(mathexpr).evalf()
         return str(result)

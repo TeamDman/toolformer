@@ -1,3 +1,4 @@
+from state import State
 from tools.base import Tool, ToolExample
 
 class WeekdayTool(Tool):
@@ -22,7 +23,7 @@ class WeekdayTool(Tool):
             method=self.invoke
         )
 
-    def invoke(self, datestr: str, *args, **kwargs) -> str:
+    def invoke(self, state: State, datestr: str, *args, **kwargs) -> str:
         import datetime
         # Convert date string to datetime object
         date_obj = datetime.datetime.strptime(datestr, '%Y-%m-%d')

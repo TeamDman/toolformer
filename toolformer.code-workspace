@@ -11,6 +11,11 @@
 		}
 	],
 	"settings": {
-		"powershell.cwd": "d:\\Repos\\Other\\toolformer\\backend"
+		"powershell.cwd": "d:\\Repos\\Other\\toolformer\\backend",
+		"cSpell.words": [
+			"maxsplit",
+			"postprompt",
+			"preprompt"
+		]
 	}
 }
