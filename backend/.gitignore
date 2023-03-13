@@ -1,4 +1,5 @@
-pythia-2.8B-deduped/
-pythia-6.9B-deduped/
+/pythia-*/
+/bloomz-*
+/mt0-*
 __pycache__
 venv
