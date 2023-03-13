@@ -10,7 +10,8 @@ async def main():
         try:
             prompt = input("Prompt: ")
             async with websockets.client.connect(f"ws://localhost:{constants.text_websocket_port}") as ws:
-                await ws.send(prompt)
+                await ws.send(json.dumps({"prompt": prompt, "stop_token": None}))
+                # await ws.send(prompt)
                 response = await ws.recv()
                 print(f"Response: {response}")
         except Exception as e:

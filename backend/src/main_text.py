@@ -3,7 +3,7 @@ import json
 import traceback
 import signal
 import constants
-from transformers import GPTNeoXForCausalLM, AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 import asyncio
 import websockets.server
@@ -12,9 +12,11 @@ async def main():
     assert torch.cuda.is_available()
 
     model_repo, model_name, model_revision = "EleutherAI", "pythia-6.9B-deduped", "step143000"
+    # model_repo, model_name, model_revision = "bigscience", "bloomz-7b1", "main"
+    # model_repo, model_name, model_revision = "bigscience", "bloomz-560m", "main"
     print("Loading model and tokenizer...")
 
-    model = GPTNeoXForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         f"{model_repo}/{model_name}",
         revision=model_revision,
         cache_dir=f"../{model_name}/{model_revision}",
@@ -42,12 +44,17 @@ async def main():
     async def serve(websocket: websockets.server.WebSocketServerProtocol):
         nonlocal model
         nonlocal tokenizer
+        # stop_tokens = tokenizer.convert_tokens_to_ids(["->",tokenizer.eos_token])
         async for message in websocket:
             print(f"[MAIN] Received {message}")
             try:
                 received = json.loads(message)
                 prompt = received["prompt"]
                 stop_token = received["stop_token"]
+                if stop_token is None:
+                    stop_token = tokenizer.eos_token
+                stop_token_id = tokenizer.encode(stop_token)[0]
+                # prompt = message.replace("->", tokenizer.eos_token)
                 
                 inputs = tokenizer(prompt, return_tensors="pt").to("cuda")
                 outputs = model.generate(
@@ -55,11 +62,13 @@ async def main():
                     # do_sample=True,
                     temperature=0.9,
                     max_new_tokens=100,
-                    eos_token_id=tokenizer.encode(stop_token)[0],
-                    pad_token_id=tokenizer.encode(stop_token)[0],
+                    # eos_token_id=stop_tokens,
+                    # eos_token_id=tokenizer.eos_token_id,
+                    eos_token_id=stop_token_id,
+                    pad_token_id=tokenizer.pad_token_id,
                 )
                 # print(f"[MAIN] Generated {outputs}")
-                response = tokenizer.decode(outputs[:, inputs["input_ids"].shape[1]:][0])
+                response = tokenizer.decode(outputs[:, inputs["input_ids"].shape[1]:][0]) #.rstrip(tokenizer.eos_token).rstrip()
                 print(f"[MAIN] Sending {response}")
                 await websocket.send(response)
             except Exception as e:

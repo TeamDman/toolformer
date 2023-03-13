@@ -78,7 +78,7 @@ async def voice_handler(state: State):
             prompt = await state.voice_queue.get()
             print(f"[VOICE HANDLER] heard '{prompt}'")
             activated = False
-            print(f"[VOICE HANDLER] mode is {state.mode}")
+            # print(f"[VOICE HANDLER] mode is {state.mode}")
             if state.mode == Mode.ALWAYS_ON:
                 activated = True
             elif state.mode == Mode.ACTIVATION_KEYWORD:
@@ -116,6 +116,7 @@ async def prediction_handler(state: State):
                 prompt, stop_token = await state.predict_queue.get()
                 # print(f"[PREDICTION HANDLER] Sending prompt to text model: {prompt}")
                 await ws.send(json.dumps({"prompt": prompt, "stop_token": stop_token}))
+                # await ws.send(prompt)
                 response = await ws.recv()
                 # print(f"[PREDICTION HANDLER] Got response from text model: {response}")
                 state.predict_reply_queue.put_nowait(response)

@@ -67,6 +67,7 @@ async def predict_with_tools(state: State, prompt: str, predict: Callable[[str, 
     if tool_was_used:
         assert result is not None
         second_prompt = first_prompt + first_response + result + "]"
+        # second_response = await predict(second_prompt, None)
         second_response = await predict(second_prompt, "\n")
         full_response = first_response + result + "]" + second_response
         return full_response, {
@@ -91,23 +92,24 @@ def build_preprompt() -> str:
     # list tool definitions
     for tool in tools:
         prompt += f"{tool.name}: {tool.description}\n"
-    # prompt += (
-    #     "\n"
-    #     "DO NOT USE TOOLS WITHIN TOOLS! KEEP ALL TOOL CALLS SEPARATE FROM EACH OTHER!"
-    #     "\n"
-    #     "YOU ARE ENCOURAGED TO USE TOOLS TO ENSURE THE ACCURACY OF YOUR RESPONSES!"
-    #     "\n"
-    #     "YOU ARE TO EXPLAIN YOUR REASONING AND SHOW YOUR WORK, WITH CLEAR CONNECTIONS BETWEEN CONCLUSIONS!"
-    #     "\n"
-    #     "DO NOT PUT A LINE BREAK BEFORE A TOOL CALL!"
-    #     "\n\n"
-    # )
-
+    
     prompt += (
         "\n"
-        "You are not required to use tools to respond to the user."
+        "DO NOT USE TOOLS WITHIN TOOLS! KEEP ALL TOOL CALLS SEPARATE FROM EACH OTHER!"
         "\n"
+        "YOU ARE ENCOURAGED TO USE TOOLS TO ENSURE THE ACCURACY OF YOUR RESPONSES!"
+        "\n"
+        "YOU ARE TO EXPLAIN YOUR REASONING AND SHOW YOUR WORK, WITH CLEAR CONNECTIONS BETWEEN CONCLUSIONS!"
+        "\n"
+        "DO NOT PUT A LINE BREAK BEFORE A TOOL CALL!"
+        "\n\n"
     )
+
+    # prompt += (
+    #     "\n"
+    #     "You are not required to use tools to respond to the user."
+    #     "\n"
+    # )
 
     # list examples
     for tool in tools:
