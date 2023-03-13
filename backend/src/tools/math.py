@@ -11,6 +11,14 @@ class MathTool(Tool):
                     input="What's 9 plus 10?",
                     output="9+10=[MATH(9+10) -> 19.0000000000000] 19."
                 ),
+                ToolExample(
+                    input="2+2",
+                    output="2+2=[MATH(2+2) -> 4.00000000000000] 4."
+                ),
+                ToolExample(
+                    input="Three over two",
+                    output="3/2=[MATH(3/2) -> 1.50000000000000] 1.5."
+                ),
             ],
             method=self.invoke
         )
