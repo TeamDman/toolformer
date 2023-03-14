@@ -2,7 +2,7 @@
 
 https://user-images.githubusercontent.com/9356891/221771638-95936503-db50-4b50-9cc8-bef088cb9d72.mp4
 
-I made a longer video too
+[I made a longer video too](https://youtu.be/DmiczzgEfMw)
 [![video thumbnail](https://img.youtube.com/vi/DmiczzgEfMw/maxresdefault.jpg)](https://youtu.be/DmiczzgEfMw)
 
 Using toolformer prompting to create a copilot for your operating system.
