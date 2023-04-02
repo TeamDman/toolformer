@@ -52,16 +52,19 @@ class SnapTool(Tool):
         return f"{exe} to {pos}"
 
     def list_windows(self) -> List[Tuple[int, str, str]]:
-        import psutil, win32process, win32gui
+        import psutil, win32process, win32gui, win32con
         def get_process_name(handle):
             pid = win32process.GetWindowThreadProcessId(handle) #This produces a list of PIDs active window relates to
             return (psutil.Process(pid[-1]).name()) #pid[-1] is the most likely to survive last longer
+            
         rtn = []
         def winEnumHandler(hwnd: int, ctx ):
             nonlocal rtn
             if win32gui.IsWindowVisible( hwnd ):
                 rtn.append((hwnd, win32gui.GetWindowText( hwnd ), get_process_name(hwnd)))
         win32gui.EnumWindows( winEnumHandler, None )
+        exclude = ["explorer.exe", "ApplicationFrameHost.exe", "SystemSettings.exe", "Music.UI.exe", "TextInputHost.exe"]
+        rtn = [x for x in rtn if x[2] not in exclude]
         return rtn
 
     def get_process_by_natural_name(self, name: str) -> None | Tuple[int, str, str]:
