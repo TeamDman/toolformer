@@ -3,3 +3,5 @@
 /mt0-*
 __pycache__
 venv
+models
+llama-7b-hf
