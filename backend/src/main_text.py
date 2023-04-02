@@ -11,7 +11,8 @@ import websockets.server
 async def main():
     assert torch.cuda.is_available()
 
-    model_repo, model_name, model_revision = "EleutherAI", "pythia-6.9B-deduped", "step143000"
+    model_repo, model_name, model_revision = "decapoda-research", "llama-7b-hf", "main"
+    # model_repo, model_name, model_revision = "EleutherAI", "pythia-6.9B-deduped", "step143000"
     # model_repo, model_name, model_revision = "bigscience", "bloomz-7b1", "main"
     # model_repo, model_name, model_revision = "bigscience", "bloomz-560m", "main"
     print("Loading model and tokenizer...")
