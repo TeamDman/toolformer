@@ -6,10 +6,12 @@
     "logInSubmitSelector": "//div[@aria-labelledby='modal-header'][@aria-modal='true'][@role='dialog']//div[@role='group'][@tabindex='0']//div[@data-testid='LoginForm_Footer_Container']//div[@data-testid='LoginForm_Login_Button'][@role='button'][@tabindex='0']//div[@dir='ltr']//span//span",
     "Log in button": "//a[@href=\"/login\"]",
     "Sign in button": "//a[@href=\"/login\"]",
-    "Username field": "//input[@autocomplete=\"username\"]",
+    "Username field": "//input[@autocapitalize=\"sentences\"][@autocomplete=\"username\"]",
     "Log in next button": "//div[@role=\"button\"]//span[contains(., 'Next')]",
     "Password field": "//input[@name=\"password\"]",
     "Log in submit button": "//div[@role=\"button\"][@data-testid=\"LoginForm_Login_Button\"][contains(., 'Log in')]",
     "OTP": "//input[@data-testid=\"ocfEnterTextTextInput\"]",
-    "OTP submit button": "//div[@role=\"button\"][@data-testid=\"ocfEnterTextNextButton\"]"
+    "OTP submit button": "//div[@role=\"button\"][@data-testid=\"ocfEnterTextNextButton\"]",
+    "tweet": "//article[@data-testid='tweet']",
+    "tweet author": "//div[@data-testid=\"User-Name\"]"
 }
