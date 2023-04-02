@@ -8,6 +8,24 @@
 		},
 		{
 			"path": "frontend"
+		},
+		{
+			"path": "../llama.cpp"
+		},
+		{
+			"path": "../text-generation-webui"
+		},
+		{
+			"path": "../alpaca.cpp"
+		},
+		{
+			"path": "C:/Users/TeamD/OneDrive/Documents/Ideas"
+		},
+		{
+			"path": "../alpaca-lora"
+		},
+		{
+			"path": "../dalai"
 		}
 	],
 	"settings": {
@@ -15,7 +33,8 @@
 		"cSpell.words": [
 			"maxsplit",
 			"postprompt",
-			"preprompt"
+			"preprompt",
+			"pyautogui"
 		]
 	}
 }
